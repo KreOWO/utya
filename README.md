@@ -1,5 +1,7 @@
 # Utya
-Created by KreOWO
+Created by KreOWO (https://github.com/KreOWO)
+
+**only for python 3.9**
 
 Voice helper on russian
 
@@ -17,4 +19,5 @@ functions:
   11. sleep PC
 
 if u have ideas, write me (kirill21superboy@gmail.com)
+
 and if u like it, donate please! (https://www.donationalerts.com/r/kreo)
