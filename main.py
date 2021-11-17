@@ -17,7 +17,7 @@ import time
 from say import say
 from callback import callback
 
-webbrowser.register('opera-gx', None, webbrowser.BackgroundBrowser('C:\\Users\\kiril\\AppData\\Local\\Programs\\Opera GX\\launcher.exe'))
+webbrowser.register('opera-gx', None, webbrowser.BackgroundBrowser('OPERA LAUNCHER PLACE'))
 name_sayed = True
 
 r = sr.Recognizer()
