@@ -13,11 +13,10 @@ functions:
   4. open programs (if u create link in C:\VOICE_PROGS)
   5. play music from youtube (now only my playlist)
   6. say now time
-  7. write what u say
+  7. write what u say, uze ctrl+c, ctrl+x, ctrl+v
   8. change volume
   9. count like calculator (in develop)
-  11. turn off PC
-  12. sleep PC
+  11. turn off / sleep / reboot PC
 
 if u have ideas, write me (kirill21superboy@gmail.com)
 
