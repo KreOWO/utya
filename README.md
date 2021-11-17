@@ -7,8 +7,8 @@
 Voice manager on russian
 
 functions:
-  1. open website
-  2. seart in google
+  1. open website in opera-gx (you must register it)
+  2. search in opera-gx (you must register it)
   3. close programs
   4. open programs (if u create link in C:\VOICE_PROGS)
   5. play music from youtube (now only my playlist)
