@@ -1,3 +1,13 @@
+"""
+
+Utya voice manager 
+
+Author of main code: KreOWO (https://github.com/KreOWO)
+
+Authors of imported libs seen on this libs
+"""
+
+
 import speech_recognition as sr
 import pyttsx3
 from fuzzywuzzy import fuzz

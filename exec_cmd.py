@@ -2,7 +2,7 @@ import os
 import datetime
 import webbrowser
 import win32gui
-from sound import Sound
+from imports.sound import Sound
 
 from to_transcript import to_transcript
 from say import say
@@ -43,11 +43,12 @@ def exec_cmd(cmd, name_sayed, prev_cmd_txt):
 			say('приложение не найдено!')
 
 	elif cmd == 'set_volume':
-		#try:
+		try:
+			if prev_cmd_txt == 'ноль': prev_cmd_txt = '0'
 			vol = int(prev_cmd_txt)
 			Sound.volume_set(vol)
 			say('громкость установлена на ' + prev_cmd_txt)
-		#except:
+		except:
 			say('неправильное значение')
 
 	elif cmd == 'quite_normal':
