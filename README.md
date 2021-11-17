@@ -22,3 +22,8 @@ functions:
 if u have ideas, write me (kirill21superboy@gmail.com)
 
 and if u like it, donate please! (https://www.donationalerts.com/r/kreo)
+
+P.S.
+Authors whose code I am using, sorry if I am doing something wrong or in violation of your license
+This is my first big project on Ginthub and I don’t know how it all works.
+write to me about all the problems, I don't want to steal your code!
