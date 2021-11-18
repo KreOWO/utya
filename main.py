@@ -7,17 +7,16 @@ Author of main code: KreOWO (https://github.com/KreOWO)
 Authors of imported libs seen on this libs
 """
 
-
 import speech_recognition as sr
 import pyttsx3
 from fuzzywuzzy import fuzz
 import webbrowser
 import time
 
-from say import say
+from opts import say
 from callback import callback
 
-webbrowser.register('opera-gx', None, webbrowser.BackgroundBrowser('OPERA LAUNCHER PLACE'))
+webbrowser.register('opera-gx', None, webbrowser.BackgroundBrowser('C:\\Users\\kiril\\AppData\\Local\\Programs\\Opera GX\\launcher.exe'))
 name_sayed = True
 
 r = sr.Recognizer()

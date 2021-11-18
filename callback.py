@@ -1,7 +1,7 @@
 import speech_recognition as sr
 
 from exec_cmd import exec_cmd
-from say import say
+from opts import say
 from opts import opts
 
 def callback(voice, name_sayed):
