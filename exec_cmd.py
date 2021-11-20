@@ -31,7 +31,7 @@ def exec_cmd(cmd, name_sayed, prev_cmd_txt):
 		webbrowser.get('opera-gx').open('https://www.youtube.com/watch?v=hTWKbfoikeg&list=PL_eFI2vJpFILfYfjq6xdt92RhRizWk50y&index=1')
 		say('Приятного прослушивания!')
 
-	elif cmd in ['brs_vk_close', 'brs_vk_return', 'brs_vk_undo', 'brs_vk_redo']:
+	elif cmd in ['brs_wk_close', 'brs_wk_return', 'brs_wk_undo', 'brs_wk_redo', 'brs_vid_past', 'brs_vid_next', 'brs_vid_stpl', 'brs_vid_full']:
 		win32gui.EnumWindows(klose_vklad, (cmd))
 		say('Выполнено')
 		
