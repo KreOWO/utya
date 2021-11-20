@@ -1,8 +1,7 @@
-import speech_recognition as sr
-
 from exec_cmd import exec_cmd
 from opts import say
 from opts import opts
+
 
 def callback(voice, name_sayed):
 	for i in opts['alias']:
@@ -28,8 +27,9 @@ def callback(voice, name_sayed):
 
 		print(new_cmd)
 		prev_cmd_txt = cmd[cmd.find(new_cmd[1]) + len(new_cmd[1]) + 1:]
-		flag_ch = exec_cmd(new_cmd[0], name_sayed, prev_cmd_txt)
-		if flag_ch != None:
-			if flag_ch[0] == 'name_sayed': name_sayed = flag_ch[1]
+		flag_ch = exec_cmd(new_cmd[0], prev_cmd_txt)
+		if flag_ch is not None:
+			if flag_ch[0] == 'name_sayed':
+				name_sayed = flag_ch[1]
 
 	return name_sayed

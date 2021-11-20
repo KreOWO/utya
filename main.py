@@ -9,7 +9,6 @@ Authors of imported libs seen on this libs
 
 import speech_recognition as sr
 import pyttsx3
-from fuzzywuzzy import fuzz
 import webbrowser
 import time
 import datetime
@@ -35,7 +34,7 @@ def hook_time():
 					if [t_now.hour, t_now.minute] == need_time:
 						fw = open('time_hooks.txt', 'w', encoding='utf-8')
 						for j in read_f:
-							if j != i: 
+							if j != i:
 								fw.write(j + '\n')
 						fw.close()
 						while do:
@@ -46,11 +45,11 @@ def hook_time():
 								time.sleep(1)
 		time.sleep(30)
 
-webbrowser.register('opera-gx', None, webbrowser.BackgroundBrowser('BROWSER PATH'))
+webbrowser.register('opera-gx', None, webbrowser.BackgroundBrowser('YOUR WAY TO OPERA'))
 name_sayed = True
 
 r = sr.Recognizer()
-micro = sr.Microphone(device_index = 1)
+micro = sr.Microphone(device_index=1)
 speak_engine = pyttsx3.init()
 r.pause_threshold = 0.5
 r.dynamic_energy_threshold = False
@@ -61,7 +60,7 @@ th.start()
 
 say('утёнок в деле!')
 
-while True: 
+while True:
 	with micro as source:
 		print("Говорите")
 		r.adjust_for_ambient_noise(source)
@@ -72,6 +71,4 @@ while True:
 		name_sayed = callback(voice, name_sayed)
 	except sr.UnknownValueError:
 		print('[log] Голос не распознан!')
-	except:
-		print('[log] Проверьте интернет соединение!')
 	time.sleep(1)
