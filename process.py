@@ -98,7 +98,6 @@ def mind(cmd, msg):
 		fw.close()
 
 
-
 def vol_change_once(btn):
 	if btn == 'down':
 		btn = 0xAE

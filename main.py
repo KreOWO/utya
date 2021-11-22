@@ -42,8 +42,8 @@ def hook_time():
                             do = False
                             time.sleep(1)
         time.sleep(30)
-#  YOUR PATH TO OPERA launcher.exe
-webbrowser.register('opera-gx', None, webbrowser.BackgroundBrowser('YOUR PATH TO OPERA launcher.exe'))
+# YOUR PATH TO OPERA launcher.exe
+webbrowser.register('opera-gx', None, webbrowser.BackgroundBrowser('C:\\Users\\kiril\\AppData\\Local\\Programs\\Opera GX\\launcher.exe'))
 name_said = True
 
 r = sr.Recognizer()

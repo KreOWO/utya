@@ -35,7 +35,7 @@ def callback(voice, name_said):
 					cmd.append(j)
 
 			for i in range(len(cmd) - 1):
-				flag_ch = exec_cmd(*new_cmd[i], cmd[i + 1])
+				flag_ch = exec_cmd(*new_cmd[i], cmd[i + 1].replace(new_cmd[i][1], '').strip())
 				if flag_ch is not None:
 					if flag_ch[0] == 'name_said':
 						name_said = flag_ch[1]
