@@ -59,8 +59,7 @@ def mind(cmd, msg):
 		fw.close()
 
 	if cmd == 'plus_time':
-		t_now = datetime.now()
-		hour, minute = t_now.hour, t_now.minute
+		hour, minute = datetime.now().hour, datetime.now().minute
 
 		hour += 2 * int('два часа' in msg)
 		hour += int('час ' in msg)

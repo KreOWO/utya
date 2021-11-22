@@ -21,6 +21,7 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 	if cmd == 'mind':
 		if 'напомни в' in cmd_name or 'будильник на' in cmd_name:
 			mind('in_time', prev_cmd_txt.replace(cmd_name, ''))
+
 		if 'напомни через' in cmd_name or 'таймер на' in cmd_name:
 			mind('plus_time', prev_cmd_txt.replace(cmd_name, ''))
 

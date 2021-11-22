@@ -4,13 +4,11 @@ from opts import opts
 
 
 def callback(voice, name_said):
-
 	if not name_said:
 		for i in opts['alias']:
 			if i in voice:
 				say('Слушаю вас')
 				name_said = True
-
 	else:
 		cmd = voice
 
