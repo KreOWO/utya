@@ -9,13 +9,20 @@ from opts import say
 from process import work_process
 from process import opera_work
 from process import set_volume
+from process import mind
 
 
-def exec_cmd(cmd, prev_cmd_txt):
+def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 	# Время
 	if cmd == 'now_time':
 		now = datetime.datetime.now()
 		say('Сейчас' + str(now.hour) + ':' + str(now.minute))
+
+	if cmd == 'mind':
+		if 'напомни в' in cmd_name or 'будильник на' in cmd_name:
+			mind('in_time', prev_cmd_txt.replace(cmd_name, ''))
+		if 'напомни через' in cmd_name or 'таймер на' in cmd_name:
+			mind('plus_time', prev_cmd_txt.replace(cmd_name, ''))
 
 	# Работа с браузером
 	elif cmd == 'search_google':
@@ -78,7 +85,7 @@ def exec_cmd(cmd, prev_cmd_txt):
 	elif cmd in ['quite_normal', 'quite_angry']:
 		outs = {'quite_normal': 'До свидания', 'quite_angry': 'соСи хуй, мудила'}
 		say(outs[cmd])
-		return 'name_sayed', False
+		return 'name_said', False
 
 	# Выключение / сон / перегазгрузка
 	elif cmd in ['pc_shutdown', 'pc_sleep', 'pc_reboot']:
