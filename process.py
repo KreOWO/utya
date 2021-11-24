@@ -98,6 +98,52 @@ def mind(cmd, msg):
 		fw.close()
 
 
+def isnum(input_text):
+	try:
+		int(input_text)
+		return True
+	except:
+		return False
+
+
+def calculate(input_text):
+	wo_do = {'плюс': '+', 'минус': '-', 'множить': '*', 'x': '*', 'х': '*', 'делить': '/'}
+	skob_ind = 0
+	input_text = input_text.split(' ')
+	output_text = ''
+	for word in input_text:
+		if isnum(word):
+			if input_text.index(word) != 0:
+				if input_text[input_text.index(word) - 1] == ')':
+					output_text += '*'
+
+			output_text += word
+		else:
+			if word in wo_do.values():
+				output_text += word
+				continue
+
+			for i in wo_do.keys():
+				if i in word:
+					output_text += wo_do[i]
+					break
+
+			if word == 'скобка':
+				if input_text.index(word, skob_ind) == 0:
+					output_text += '('
+					skob_ind = input_text.index(word, skob_ind) + 1
+				elif input_text[input_text.index(word) - 1] in wo_do.values():
+					output_text += '('
+				else:
+					output_text += ')'
+				continue
+	try:
+		to_say = eval(output_text)
+		say(to_say)
+	except:
+		say('неправильное выражение')
+
+
 def vol_change_once(btn):
 	if btn == 'down':
 		btn = 0xAE

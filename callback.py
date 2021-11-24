@@ -2,6 +2,7 @@ from exec_cmd import exec_cmd
 from opts import say
 from opts import opts
 
+name_said = False
 
 def callback(voice, name_said):
 	if not name_said:

@@ -10,6 +10,7 @@ from process import work_process
 from process import opera_work
 from process import set_volume
 from process import mind
+from process import calculate
 
 
 def exec_cmd(cmd, cmd_name, prev_cmd_txt):
@@ -48,6 +49,11 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 		win32gui.EnumWindows(opera_work, cmd)
 		say('Выполнено')
 
+	elif cmd == 'brs_vid_find':
+		webbrowser.get('opera-gx').open(
+			'https://www.youtube.com/results?search_query=' + prev_cmd_txt.replace(' ', '+'))
+		say('Ищу ' + prev_cmd_txt)
+
 	# Работа с клавиатурой
 	elif cmd == 'kb_write':
 		keyboard.write(prev_cmd_txt, 0.05)
@@ -81,6 +87,11 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 			say('громкость установлена на' + prev_cmd_txt)
 		except:
 			say('неправильное значение')
+
+	# Посчитать
+	elif cmd == 'calculate':
+		calculate(prev_cmd_txt)
+
 
 	# Приостановить Утёнка
 	elif cmd in ['quite_normal', 'quite_angry']:
