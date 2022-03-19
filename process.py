@@ -4,13 +4,14 @@ import keyboard
 import ctypes
 from datetime import datetime
 
-from opts import to_transcript
 from opts import say
 
 
 def work_process(hwnd, extra):
 	prev_cmd_txt, flag = extra
-	t_cmd_text = to_transcript(prev_cmd_txt)
+	t_cript = [list('абвгдеёжзийклмнопрстуфхцчшщъыьэюя '),
+	           'a|b|v|g|d|e|e|zh|z|i|i|k|l|m|n|o|p|r|s|t|u|f|kh|tc|ch|sh|shch||y||e|iu|ia| '.split('|')]
+	t_cmd_text = ''.join([int(i in t_cript[0]) * t_cript[1][t_cript[0].index(i)] + int(i in t_cript[1]) * i for i in prev_cmd_txt])
 	process_name = win32gui.GetWindowText(hwnd)
 	if process_name != '' and prev_cmd_txt != '':
 		if prev_cmd_txt in process_name.lower() or t_cmd_text in process_name.lower():
@@ -18,7 +19,8 @@ def work_process(hwnd, extra):
 				try:
 					win32gui.PostMessage(hwnd, win32con.WM_CLOSE)
 					say(prev_cmd_txt + ' закрыто')
-				except:
+				except Exception as e:
+					print(f'[ERROR] {e}')
 					say('отказано в доступе')
 
 			if flag == 'enable_process':
@@ -38,7 +40,7 @@ def opera_work(hwnd, extra):
 		win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
 		sends = {'brs_wk_close': 'ctrl+w', 'brs_wk_return': 'ctrl+shift+t', 'brs_wk_undo': 'ctrl+left',
 		         'brs_wk_redo': 'ctrl+right',
-		         'brs_vid_past': 'shift+p', 'brs_vid_next': 'shift+n', 'brs_vid_stpl': 'k', 'brs_vid_full': 'f'}
+		         'brs_vid_past': 'shift+p', 'brs_vid_next': 'shift+n', 'brs_vid_stpl': 'space', 'brs_vid_full': 'f'}
 		keyboard.send(sends[flag])
 		if was:
 			win32gui.ShowWindow(hwnd, win32con.SW_MINIMIZE)
@@ -46,12 +48,11 @@ def opera_work(hwnd, extra):
 
 def mind(cmd, msg):
 	if cmd == 'in_time':
-
 		for i in ['минуту', 'минуты', 'минут']:
 			if i in msg:
 				msg = str(datetime.now().hour) + ':' + msg.split(' ')[1] + msg.split(i)[1]
 
-		time_i_need = msg.split(':')[0][1:] + ':' + msg.split(':')[1][:2]
+		time_i_need = msg.split(':')[0] + ':' + msg.split(':')[1][:2]
 		line = time_i_need + '!' + msg.replace(time_i_need, '')
 		print(line)
 		fw = open('time_hooks.txt', 'a', encoding='utf-8')
@@ -62,7 +63,9 @@ def mind(cmd, msg):
 		hour, minute = datetime.now().hour, datetime.now().minute
 
 		hour += 2 * int('два часа' in msg)
-		hour += int('час ' in msg)
+		hour += int('час ' in msg) + int('полтора ' in msg)
+		minute += 30 * (int('полчаса ' in msg) + int('полтора ' in msg) + int('с половиной ' in msg))
+		msg = msg.replace('полчаса ', '').replace('полтора ', '').replace('с половиной ', '').replace('час ', '')
 
 		for i in ['минуту', 'минуты', 'минут']:
 			if i in msg:
@@ -75,7 +78,7 @@ def mind(cmd, msg):
 			msg = msg[0]
 			print(msg)
 
-		if ':' in msg.split(' ')[1]:
+		if ':' in msg.split(' ')[0]:
 			msg = msg.split(':')
 			hour += int(msg[0])
 			minute += int(msg[1][:2])
@@ -87,29 +90,30 @@ def mind(cmd, msg):
 
 		hour %= 24
 
-		if minute >= 10:
-			line = str(hour) + ':' + str(minute) + '!' + msg
-		else:
-			line = str(hour) + ':0' + str(minute) + '!' + msg
+		time_i_need = f'{hour}:{int(minute < 10) * "0"}{minute}'
+
+		line = time_i_need + '!' + msg
 		print(line)
 
 		fw = open('time_hooks.txt', 'a', encoding='utf-8')
 		fw.write('\n' + line)
 		fw.close()
 
+	say('Напомню в ' + time_i_need)
+
 
 def isnum(input_text):
 	try:
-		int(input_text)
+		float(input_text)
 		return True
 	except:
 		return False
 
 
 def calculate(input_text):
-	wo_do = {'плюс': '+', 'минус': '-', 'множить': '*', 'x': '*', 'х': '*', 'делить': '/'}
+	wo_do = dict(плюс='+', минус='-', умножить='*', x='*', х='*', делить='/', дробь='/')
 	skob_ind = 0
-	input_text = input_text.split(' ')
+	input_text = input_text.replace(',', '.').split(' ')
 	output_text = ''
 	for word in input_text:
 		if isnum(word):
@@ -138,21 +142,21 @@ def calculate(input_text):
 					output_text += ')'
 				continue
 	try:
-		to_say = eval(output_text)
+		print(output_text)
+		to_say = int(eval(output_text) * 1000) / 1000
+		print(to_say)
 		say(to_say)
-	except:
+	except Exception as e:
+		print(f'[ERROR] {e}')
+		print('неправильное выражение')
 		say('неправильное выражение')
 
 
 def vol_change_once(btn):
-	if btn == 'down':
-		btn = 0xAE
-	if btn == 'up':
-		btn = 0xAF
 	for j in [0, 0x0002]:
 		extra = ctypes.c_ulong(0)
 		ii_ = Input_I()
-		ii_.ki = KeyBdInput(btn, 0x48, j, 0, ctypes.pointer(extra))
+		ii_.ki = KeyBdInput(dict(down=0xAE, up=0xAF)[btn], 0x48, j, 0, ctypes.pointer(extra))
 		x = Input(ctypes.c_ulong(1), ii_)
 		ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 

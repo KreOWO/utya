@@ -51,8 +51,8 @@ micro = sr.Microphone(device_index=1)
 speak_engine = pyttsx3.init()
 r.pause_threshold = 0.5
 
-th = Thread(target=hook_time)
-th.start()
+hook_time_thread = Thread(target=hook_time)
+hook_time_thread.start()
 
 say('утёнок в деле!')
 
@@ -65,6 +65,6 @@ while True:
         voice = r.recognize_google(audio, language='ru-RU').lower()
         print('[log] Распознано: ' + voice)
         name_said = callback(voice, name_said)
-    except sr.UnknownValueError:
+    except Exception as e:
+        print(f'[ERROR] {e}')
         print('[log] Голос не распознан!')
-    time.sleep(1)

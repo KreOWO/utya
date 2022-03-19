@@ -4,7 +4,6 @@ import webbrowser
 import win32gui
 import keyboard
 
-from opts import to_transcript
 from opts import say
 from process import work_process
 from process import opera_work
@@ -25,6 +24,7 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 
 		if 'напомни через' in cmd_name or 'таймер на' in cmd_name:
 			mind('plus_time', prev_cmd_txt)
+
 
 	# Работа с браузером
 	elif cmd == 'search_google':
@@ -70,22 +70,50 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 		win32gui.EnumWindows(work_process, (prev_cmd_txt, cmd))
 
 	elif cmd == 'start_process':
-		filename = 'C:\\VOICE_PROGS\\' + to_transcript(prev_cmd_txt)
-		try:
-			os.startfile(filename)
-			say('запускаю приложение' + prev_cmd_txt)
-		except:
-			say('приложение не найдено!')
+		prev_cmd_txt = prev_cmd_txt.replace('апекс', 'apex')
+		t_cript = [list('абвгдеёжзийклмнопрстуфхцчшщъыьэюя '),
+		           'a|b|v|g|d|e|e|zh|z|i|i|k|l|m|n|o|p|r|s|t|u|f|kh|tc|ch|sh|shch||y||e|iu|ia| '.split('|')]
+
+		filename = ''.join(
+			[int(i in t_cript[0]) * t_cript[1][t_cript[0].index(i)] + int(i in t_cript[1]) * i for i in prev_cmd_txt])
+
+		if filename != '':
+			filepath = 'C:\\VOICE_PROGS\\'
+			if filename in [i.split('.')[0] for i in os.listdir(filepath)]:
+				os.startfile(filepath + filename)
+				say('запускаю' + prev_cmd_txt)
+			else:
+				finded = False
+				steam_path_name = 'D:\\SteamLibrary\\steamapps\\common\\'
+				steam_games = os.listdir(steam_path_name)
+				steam_games_lower = [i.lower() for i in steam_games]
+				for i in steam_games_lower:
+					if filename in i:
+						game_path = steam_path_name + steam_games[steam_games_lower.index(i)]
+						files_in_game_path = os.listdir(game_path)
+						for j in files_in_game_path:
+							if '.exe' in j:
+								if filename in j:
+									os.startfile(game_path + '\\' + j)
+									finded = True
+									break
+					if finded:
+						break
+
+				if not finded:
+					say('приложение не найдено!')
 
 	# Изменить громкость
 	elif cmd == 'set_volume':
 		try:
-			if prev_cmd_txt == 'ноль':
-				prev_cmd_txt = '0'
-			vol = int(prev_cmd_txt)
+			word_num = ['ноль', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять']
+			if prev_cmd_txt in word_num:
+				prev_cmd_txt = prev_cmd_txt.replace(prev_cmd_txt, str(word_num.index(prev_cmd_txt)))
+			vol = int(prev_cmd_txt.split(':')[0])
 			set_volume(vol)
-			say('громкость установлена на' + prev_cmd_txt)
-		except:
+			say(f'громкость установлена на {vol}')
+		except Exception as e:
+			print(f'[ERROR] {e}')
 			say('неправильное значение')
 
 	# Посчитать

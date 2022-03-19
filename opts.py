@@ -1,8 +1,6 @@
 import time
 import pyttsx3
 
-t_cript = ['абвгдеёжзийклмнопрстуфхцчшщъыьэюя', 'a|b|v|g|d|e|e|zh|z|i|i|k|l|m|n|o|p|r|s|t|u|f|kh|tc|ch|sh|shch||y||e|iu|ia'.split('|')]
-
 opts = {
 		'alias': ('у тебя', 'утёнок', 'утя'),
 		'tbr': ['сейчас '],
@@ -20,9 +18,9 @@ opts = {
 			'brs_wk_undo': ['предыдущая вкладка', 'предыдущая страница'],
 			'brs_wk_redo': ['следующая вкладка', 'следующая страница'],
 				# Работа с видео
-				'brs_vid_past': ['предыдущee видео'],
+				'brs_vid_past': ['предыдущее видео'],
 				'brs_vid_next': ['следующее видео'],
-				'brs_vid_stpl': ['поставь на паузу', 'продолжи видео', 'останови видео', 'пауза видео'],
+				'brs_vid_stpl': ['поставь на паузу', 'продолжи видео', 'останови видео', 'пауза'],
 				'brs_vid_full': ['fullscreen', 'полный экран'],
 				'brs_vid_find': ['найди видео'],
 			# Работа с клавиатурой
@@ -52,17 +50,12 @@ opts = {
 
 def say(txt):
 	do = True
+	engine = pyttsx3.init()
 	while do:
 		try:
-			engine = pyttsx3.init()
 			engine.say(txt)
 			engine.runAndWait()
 			do = False
-		except:
+		except Exception as e:
+			print(f'[ERROR] {e}')
 			time.sleep(1)
-
-
-def to_transcript(txt):
-	for i in range(len(t_cript[0])):
-		txt = txt.replace(t_cript[0][i], t_cript[1][i])
-	return txt
