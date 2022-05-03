@@ -1,16 +1,3 @@
-<head>
-   <style>
-      ol {
-         list-style: none;
-         counter-reset: li;
-      }
-      li:before {
-         counter-increment: li;
-         content: counters(li, ".") ". ";
-      }
-   </style>
-</head>
-
 # Utya
 
 # Only for python 3.9
