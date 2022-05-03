@@ -79,7 +79,7 @@
 
 На английском не могу написать правильно, пж дайте правки
 
-if u have ideas, write me (kirill21superboy@gmail.com)
+if u have ideas, write me (kreosmain@gmail.com)
 
 and if u like it, donate please! (https://www.donationalerts.com/r/kreo)
 
