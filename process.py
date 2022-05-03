@@ -4,14 +4,11 @@ import keyboard
 import ctypes
 from datetime import datetime
 
-from opts import say
+from asyncs import say
 
 
 def work_process(hwnd, extra):
-	prev_cmd_txt, flag = extra
-	t_cript = [list('абвгдеёжзийклмнопрстуфхцчшщъыьэюя '),
-	           'a|b|v|g|d|e|e|zh|z|i|i|k|l|m|n|o|p|r|s|t|u|f|kh|tc|ch|sh|shch||y||e|iu|ia| '.split('|')]
-	t_cmd_text = ''.join([int(i in t_cript[0]) * t_cript[1][t_cript[0].index(i)] + int(i in t_cript[1]) * i for i in prev_cmd_txt])
+	t_cmd_text, prev_cmd_txt, flag = extra
 	process_name = win32gui.GetWindowText(hwnd)
 	if process_name != '' and prev_cmd_txt != '':
 		if prev_cmd_txt in process_name.lower() or t_cmd_text in process_name.lower():
@@ -47,6 +44,7 @@ def opera_work(hwnd, extra):
 
 
 def mind(cmd, msg):
+	time_i_need = '00:00'
 	if cmd == 'in_time':
 		for i in ['минуту', 'минуты', 'минут']:
 			if i in msg:
@@ -150,6 +148,18 @@ def calculate(input_text):
 		print(f'[ERROR] {e}')
 		print('неправильное выражение')
 		say('неправильное выражение')
+
+
+def rus_to_eng(txt):
+	t_cript = [list('а|б|в|г|д|е|ё|ж|з|и|й|к|л|м|н|о|п|р|с|т|у|ф|х|ц|ч|ш|щ|ъ|ы|ь|э|ю|я| |кс'.split('|')),
+	           'a|b|v|g|d|e|e|zh|z|i|i|k|l|m|n|o|p|r|s|t|u|f|kh|tc|ch|sh|shch||y||e|iu|ia| |x'.split('|')]
+	res = ''
+	for i in txt:
+		if i in t_cript[0]:
+			res += t_cript[1][t_cript[0].index(i)]
+		else:
+			res += i
+	return res
 
 
 def vol_change_once(btn):

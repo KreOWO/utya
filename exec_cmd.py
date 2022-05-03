@@ -4,19 +4,20 @@ import webbrowser
 import win32gui
 import keyboard
 
-from opts import say
+from asyncs import say
 from process import work_process
 from process import opera_work
 from process import set_volume
 from process import mind
 from process import calculate
+from process import rus_to_eng
 
 
 def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 	# Время
 	if cmd == 'now_time':
 		now = datetime.datetime.now()
-		say('Сейчас' + str(now.hour) + ':' + str(now.minute))
+		say('Сейчас ' + str(now.hour) + ':' + str(now.minute))
 
 	if cmd == 'mind':
 		if 'напомни в' in cmd_name or 'будильник на' in cmd_name:
@@ -57,31 +58,32 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 	# Работа с клавиатурой
 	elif cmd == 'kb_write':
 		keyboard.write(prev_cmd_txt, 0.05)
-		say(prev_cmd_txt + ' напечатано!')
+		say('Напечатано!')
+
+	elif cmd == 'kb_write_long_start':
+		say('Печатаю')
+		keyboard.write(prev_cmd_txt, 0.05)
+		return 'long_text', True
 
 	elif cmd in ['kb_cut', 'kb_copy', 'kb_paste', 'kb_undo', 'kb_redo']:
 		h_keys = {'kb_cut': 'ctrl+x', 'kb_copy': 'ctrl+c', 'kb_paste': 'ctrl+v', 'kb_undo': 'ctrl+z',
 		          'kb_redo': 'ctrl+shift+z'}
 		keyboard.send(h_keys[cmd])
-		say('выполнено')
+		say('Выполнено')
 
 	# Работа с окнами
 	elif cmd in ['kill_process', 'enable_process', 'disable_process']:
-		win32gui.EnumWindows(work_process, (prev_cmd_txt, cmd))
+		t_cmd_text = rus_to_eng(prev_cmd_txt)
+		win32gui.EnumWindows(work_process, (t_cmd_text, prev_cmd_txt, cmd))
 
 	elif cmd == 'start_process':
-		prev_cmd_txt = prev_cmd_txt.replace('апекс', 'apex')
-		t_cript = [list('абвгдеёжзийклмнопрстуфхцчшщъыьэюя '),
-		           'a|b|v|g|d|e|e|zh|z|i|i|k|l|m|n|o|p|r|s|t|u|f|kh|tc|ch|sh|shch||y||e|iu|ia| '.split('|')]
-
-		filename = ''.join(
-			[int(i in t_cript[0]) * t_cript[1][t_cript[0].index(i)] + int(i in t_cript[1]) * i for i in prev_cmd_txt])
-
+		print(prev_cmd_txt, 'asdasd')
+		filename = rus_to_eng(prev_cmd_txt)
 		if filename != '':
 			filepath = 'C:\\VOICE_PROGS\\'
 			if filename in [i.split('.')[0] for i in os.listdir(filepath)]:
 				os.startfile(filepath + filename)
-				say('запускаю' + prev_cmd_txt)
+				say('запускаю ' + prev_cmd_txt)
 			else:
 				finded = False
 				steam_path_name = 'D:\\SteamLibrary\\steamapps\\common\\'
@@ -106,7 +108,8 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 	# Изменить громкость
 	elif cmd == 'set_volume':
 		try:
-			word_num = ['ноль', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять']
+			word_num = ['ноль', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять', 'деcять']
+			prev_cmd_txt = prev_cmd_txt.split()[0]
 			if prev_cmd_txt in word_num:
 				prev_cmd_txt = prev_cmd_txt.replace(prev_cmd_txt, str(word_num.index(prev_cmd_txt)))
 			vol = int(prev_cmd_txt.split(':')[0])

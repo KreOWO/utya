@@ -9,14 +9,14 @@ Voice manager on russian
 functions:
   1. open website / search in opera-gx (you must register it)
   2. close / return / undo / redo tabs in opera-gx (you must register it)
-  4. close programs
-  5. open programs (if u create link in C:\VOICE_PROGS)
-  6. play music from youtube (now only my playlist)
-  7. say now time
-  8. write what u say, uze hotkeys (copy, cut, paste, undo, redo)
-  9. change volume (work, but will be update)
-  10. count like calculator (in develop)
-  11. turn off / sleep / reboot PC
+  3. close programs
+  4. open programs (if u create link in C:\VOICE_PROGS)
+  5. play music from youtube (now only my playlist)
+  6. say now time
+  7. write what u say, uze hotkeys (copy, cut, paste, undo, redo)
+  8. change volume (work, but will be update)
+  9. count like calculator (in develop)
+  10. turn off / sleep / reboot PC
 
 if u have ideas, write me (kirill21superboy@gmail.com)
 

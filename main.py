@@ -5,46 +5,29 @@ Utya voice manager
 Author of main code: KreOWO (https://github.com/KreOWO)
 
 Authors of imported libs seen on this libs
+
+в планах: такую х**** чтобы он печатал сам то есть ему говоришь печатает текст и он печатает пока ты не скажешь
+перестань печатать
+
+ещё нужно сделать такую з***** чтобы голос лучше распознавался точнее вычитать из звука с микрофона звук с компьютера
+
+сделать так чтобы запоминал последнюю цифру посчитаю и считал от неё дальше
+
 """
 
 import speech_recognition as sr
 import pyttsx3
 import webbrowser
-import time
-import datetime
 from threading import Thread
 
-from opts import say
+from asyncs import say
+from asyncs import hook_time
 from callback import callback
 
-
-def hook_time():
-    while True:
-        do = True
-        f = open('time_hooks.txt', 'r', encoding='utf-8')
-        read_f = f.read().split('\n')
-        f.close()
-        if read_f != ['']:
-            read_f.sort()
-            for i in read_f:
-                if i != '':
-                    time_flag, msg = i.split('!')
-                    need_time = list(map(int, time_flag.split(':')))
-                    t_now = datetime.datetime.now().time()
-                    if [t_now.hour, t_now.minute] == need_time:
-                        fw = open('time_hooks.txt', 'w', encoding='utf-8')
-                        for j in read_f:
-                            if j != i:
-                                fw.write(j + '\n')
-                        fw.close()
-                        while do:
-                            say(time_flag + ' ' + msg)
-                            do = False
-                            time.sleep(1)
-        time.sleep(30)
 # YOUR PATH TO OPERA launcher.exe
 webbrowser.register('opera-gx', None, webbrowser.BackgroundBrowser('C:\\Users\\kiril\\AppData\\Local\\Programs\\Opera GX\\launcher.exe'))
 name_said = True
+long_text = False
 
 r = sr.Recognizer()
 micro = sr.Microphone(device_index=1)
@@ -64,7 +47,7 @@ while True:
     try:
         voice = r.recognize_google(audio, language='ru-RU').lower()
         print('[log] Распознано: ' + voice)
-        name_said = callback(voice, name_said)
+        name_said, long_text = callback(voice, name_said, long_text)
     except Exception as e:
         print(f'[ERROR] {e}')
         print('[log] Голос не распознан!')
