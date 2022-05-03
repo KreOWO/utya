@@ -57,13 +57,14 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 
 	# Работа с клавиатурой
 	elif cmd == 'kb_write':
-		keyboard.write(prev_cmd_txt, 0.05)
+		keyboard.write(prev_cmd_txt, 0.01)
 		say('Напечатано!')
 
 	elif cmd == 'kb_write_long_start':
 		say('Печатаю')
-		keyboard.write(prev_cmd_txt, 0.05)
-		return 'long_text', True
+		last_text = [prev_cmd_txt + ' ']
+		keyboard.write(prev_cmd_txt + ' ', 0.01)
+		return 'long_text', last_text
 
 	elif cmd in ['kb_cut', 'kb_copy', 'kb_paste', 'kb_undo', 'kb_redo']:
 		h_keys = {'kb_cut': 'ctrl+x', 'kb_copy': 'ctrl+c', 'kb_paste': 'ctrl+v', 'kb_undo': 'ctrl+z',

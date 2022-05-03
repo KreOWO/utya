@@ -1,20 +1,24 @@
 from exec_cmd import exec_cmd
 from asyncs import say
 from opts import opts
-import re
 
-def callback(voice, name_said, long_text):
+
+def callback(voice, name_said, long_text, last_text):
 	if not name_said:
-		for i in ('у тебя', 'утёнок', 'утя', 'утенок'):
-			if i in voice:
-				say('Слушаю вас')
-				name_said = True
+		if voice in ['у тебя', 'утёнок', 'утя', 'утенок']:
+			say('Слушаю вас')
+			name_said = True
 	else:
 		if long_text:
-			if 'перестань печатать' in voice or 'конец текста' in voice:
+			if voice in ['конец текста', 'перестань печатать']:
+				last_text = []
 				say('Закончил')
 				long_text = False
+			elif voice in ['отмена', 'вернуть', 'назад'] and last_text != []:
+				exec_cmd('kb_write', '', len(last_text[-1]) * '\b')
+				last_text = last_text[:-1]
 			else:
+				last_text.append(voice + ' ')
 				exec_cmd('kb_write', '', voice + ' ')
 		else:
 			cmd = voice
@@ -44,5 +48,8 @@ def callback(voice, name_said, long_text):
 							name_said = flag_ch[1]
 						if flag_ch[0] == 'long_text':
 							long_text = True
+							last_text = flag_ch[1]
 
-	return name_said, long_text
+	return name_said, long_text, last_text
+
+#

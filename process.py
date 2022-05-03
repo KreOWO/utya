@@ -146,7 +146,6 @@ def calculate(input_text):
 		say(to_say)
 	except Exception as e:
 		print(f'[ERROR] {e}')
-		print('неправильное выражение')
 		say('неправильное выражение')
 
 
