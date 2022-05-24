@@ -29,6 +29,7 @@ def hook_time():
 							sleep(1)
 		sleep(30)
 
+
 def say(txt):
 	speak = wincl.Dispatch("SAPI.SpVoice")
 	saying = lambda: speak.Speak(txt)

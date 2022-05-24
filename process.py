@@ -21,12 +21,17 @@ def work_process(hwnd, extra):
 					say('отказано в доступе')
 
 			if flag == 'enable_process':
-				win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
+				win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
 				say(prev_cmd_txt + ' развёрнуто')
 
 			if flag == 'disable_process':
-				win32gui.ShowWindow(hwnd, win32con.SW_MINIMIZE)
+				win32gui.ShowWindow(hwnd, win32con.SW_HIDE)
 				say(prev_cmd_txt + ' свёрнуто')
+
+			if flag == 'foreground_process':
+				win32gui.ShowWindow(hwnd, win32con.SW_MINIMIZE)
+				win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
+				say(prev_cmd_txt + ' главное')
 
 
 def opera_work(hwnd, extra):
@@ -36,8 +41,8 @@ def opera_work(hwnd, extra):
 		was = win32gui.IsIconic(hwnd)
 		win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
 		sends = {'brs_wk_close': 'ctrl+w', 'brs_wk_return': 'ctrl+shift+t', 'brs_wk_undo': 'ctrl+left',
-		         'brs_wk_redo': 'ctrl+right',
-		         'brs_vid_past': 'shift+p', 'brs_vid_next': 'shift+n', 'brs_vid_stpl': 'space', 'brs_vid_full': 'f'}
+				 'brs_wk_redo': 'ctrl+right',
+				 'brs_vid_past': 'shift+p', 'brs_vid_next': 'shift+n', 'brs_vid_stpl': 'space', 'brs_vid_full': 'f'}
 		keyboard.send(sends[flag])
 		if was:
 			win32gui.ShowWindow(hwnd, win32con.SW_MINIMIZE)
@@ -108,7 +113,15 @@ def isnum(input_text):
 		return False
 
 
-def calculate(input_text):
+def to_num(text):
+	word_num = ['ноль', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять', 'десять']
+	if text in word_num:
+		return word_num.index(text)
+	else:
+		return int(text.split(':')[0])
+
+
+def calculate(last_num, input_text):
 	wo_do = dict(плюс='+', минус='-', умножить='*', x='*', х='*', делить='/', дробь='/')
 	skob_ind = 0
 	input_text = input_text.replace(',', '.').split(' ')
@@ -140,10 +153,13 @@ def calculate(input_text):
 					output_text += ')'
 				continue
 	try:
+		output_text.replace(' ', '')
+		if output_text[0] in '+-*/':
+			output_text = str(last_num) + output_text
 		print(output_text)
 		to_say = int(eval(output_text) * 1000) / 1000
-		print(to_say)
 		say(to_say)
+		return to_say
 	except Exception as e:
 		print(f'[ERROR] {e}')
 		say('неправильное выражение')
@@ -151,7 +167,7 @@ def calculate(input_text):
 
 def rus_to_eng(txt):
 	t_cript = [list('а|б|в|г|д|е|ё|ж|з|и|й|к|л|м|н|о|п|р|с|т|у|ф|х|ц|ч|ш|щ|ъ|ы|ь|э|ю|я| |кс'.split('|')),
-	           'a|b|v|g|d|e|e|zh|z|i|i|k|l|m|n|o|p|r|s|t|u|f|kh|tc|ch|sh|shch||y||e|iu|ia| |x'.split('|')]
+			   'a|b|v|g|d|e|e|zh|z|i|i|k|l|m|n|o|p|r|s|t|u|f|kh|tc|ch|sh|shch||y||ai|iu|ia| |x'.split('|')]
 	res = ''
 	for i in txt:
 		if i in t_cript[0]:

@@ -11,9 +11,10 @@ from process import set_volume
 from process import mind
 from process import calculate
 from process import rus_to_eng
+from process import to_num
 
 
-def exec_cmd(cmd, cmd_name, prev_cmd_txt):
+def exec_cmd(cmd, cmd_name, prev_cmd_txt, varable):
 	# Время
 	if cmd == 'now_time':
 		now = datetime.datetime.now()
@@ -25,7 +26,6 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 
 		if 'напомни через' in cmd_name or 'таймер на' in cmd_name:
 			mind('plus_time', prev_cmd_txt)
-
 
 	# Работа с браузером
 	elif cmd == 'search_google':
@@ -60,11 +60,19 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 		keyboard.write(prev_cmd_txt, 0.01)
 		say('Напечатано!')
 
+	elif cmd == 'kb_click':
+		try:
+			keyboard.press(prev_cmd_txt.split()[0])
+			say('Есть!')
+		except:
+			say('Кнопка не нажата')
+
 	elif cmd == 'kb_write_long_start':
 		say('Печатаю')
 		last_text = [prev_cmd_txt + ' ']
 		keyboard.write(prev_cmd_txt + ' ', 0.01)
-		return 'long_text', last_text
+		varable.long_text = True
+		varable.last_text = last_text
 
 	elif cmd in ['kb_cut', 'kb_copy', 'kb_paste', 'kb_undo', 'kb_redo']:
 		h_keys = {'kb_cut': 'ctrl+x', 'kb_copy': 'ctrl+c', 'kb_paste': 'ctrl+v', 'kb_undo': 'ctrl+z',
@@ -73,7 +81,7 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 		say('Выполнено')
 
 	# Работа с окнами
-	elif cmd in ['kill_process', 'enable_process', 'disable_process']:
+	elif cmd in ['kill_process', 'enable_process', 'disable_process', 'foreground_process']:
 		t_cmd_text = rus_to_eng(prev_cmd_txt)
 		win32gui.EnumWindows(work_process, (t_cmd_text, prev_cmd_txt, cmd))
 
@@ -106,14 +114,46 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 				if not finded:
 					say('приложение не найдено!')
 
+	# Работа с заметками
+	elif cmd == 'add_note':
+		notes = open('notes.txt', 'a', encoding='utf-8')
+		notes.write(prev_cmd_txt + '\n\n')
+		notes.close()
+		say('Выполнено')
+
+	elif cmd == 'read_note':
+		file = open('notes.txt', 'r', encoding='utf-8')
+		notes = file.read()
+		file.close()
+		all_notes = []
+		num_note = 1
+		for note in notes.split('\n'):
+			if note != '':
+				all_notes.append(str(num_note) + ' ' + note)
+				num_note += 1
+		say(all_notes)
+
+	elif cmd == 'delete_note':
+		file = open('notes.txt', 'r', encoding='utf-8')
+		notes = file.read()
+		file.close()
+		while '\n\n' in notes:
+			notes = notes.replace('\n\n', '\n')
+		need_num = to_num(prev_cmd_txt.split()[0])
+		new = ''
+		notes = notes.split('\n')
+		for i in range(len(notes)):
+			if i != need_num - 1:
+				new += notes[i] + '\n\n'
+		file = open('notes.txt', 'w', encoding='utf-8')
+		file.write(new)
+		file.close()
+		say('Выполнено')
+
 	# Изменить громкость
 	elif cmd == 'set_volume':
 		try:
-			word_num = ['ноль', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять', 'деcять']
-			prev_cmd_txt = prev_cmd_txt.split()[0]
-			if prev_cmd_txt in word_num:
-				prev_cmd_txt = prev_cmd_txt.replace(prev_cmd_txt, str(word_num.index(prev_cmd_txt)))
-			vol = int(prev_cmd_txt.split(':')[0])
+			vol = to_num(prev_cmd_txt.split()[0])
 			set_volume(vol)
 			say(f'громкость установлена на {vol}')
 		except Exception as e:
@@ -122,18 +162,20 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt):
 
 	# Посчитать
 	elif cmd == 'calculate':
-		calculate(prev_cmd_txt)
 
+		num = calculate(varable.last_calculated, prev_cmd_txt)
+		varable.last_calculated = num
 
 	# Приостановить Утёнка
 	elif cmd in ['quite_normal', 'quite_angry']:
 		outs = {'quite_normal': 'До свидания', 'quite_angry': 'соСи хуй, мудила'}
 		say(outs[cmd])
-		return 'name_said', False
+		varable.name_said = False
 
 	# Выключение / сон / перегазгрузка
 	elif cmd in ['pc_shutdown', 'pc_sleep', 'pc_reboot']:
-		ends = {'pc_shutdown': ['/s /f /t 0', 'Спокойной ночи'], 'pc_sleep': ['/h /t 0', 'До встречи, буду вас ждать'],
+		ends = {'pc_shutdown': ['/s /f /t 0', 'Спокойной ночи'],
+		        'pc_sleep': ['/h /t 0', 'До встречи, буду вас ждать'],
 		        'pc_reboot': ['/r /f /t 0', 'Скоро увидимся']}
 		say(ends[cmd][1])
 		os.system('shutdown ' + ends[cmd][0])

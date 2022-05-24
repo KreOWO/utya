@@ -6,15 +6,6 @@ Author of main code: KreOWO (https://github.com/KreOWO)
 
 Authors of imported libs seen on this libs
 
-
-в планах:
-
-ещё нужно сделать такую з***** чтобы голос лучше распознавался точнее вычитать из звука с микрофона звук с компьютера
-
-сделать так чтобы запоминал последнюю цифру посчитаю и считал от неё дальше
-
-
-
 """
 
 import speech_recognition as sr
@@ -29,9 +20,13 @@ from callback import callback
 # YOUR PATH TO OPERA launcher.exe
 webbrowser.register('opera-gx', None, webbrowser.BackgroundBrowser('C:\\Users\\kiril\\AppData\\Local\\Programs\\Opera GX\\launcher.exe'))
 
-name_said = True
-long_text = False
-last_text = []
+
+class varable(object):
+    name_said = True
+    long_text = False
+    last_text = []
+    last_task = []
+    last_calculated = 0
 
 r = sr.Recognizer()
 micro = sr.Microphone(device_index=1)
@@ -51,7 +46,7 @@ while True:
     try:
         voice = r.recognize_google(audio, language='ru-RU').lower()
         print('[log] Распознано: ' + voice)
-        name_said, long_text, last_text = callback(voice, name_said, long_text, last_text)
+        varable = callback(voice, varable)
     except Exception as e:
         print(f'[ERROR] {e}')
         print('[log] Голос не распознан!')
