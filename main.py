@@ -15,6 +15,7 @@ from datetime import datetime
 import pyaudio
 import audioop
 import math
+import wikipedia
 
 from asyncs import say
 from asyncs import hook_time
@@ -66,18 +67,12 @@ def recognize(varable):
 
 
 def main():
+    wikipedia.set_lang('ru')
     webbrowser.register('opera-gx', None, webbrowser.BackgroundBrowser('C:\\Users\\kiril\\AppData\\Local\\Programs\\Opera GX\\launcher.exe'))
 
     hook_time_thread = Thread(target=hook_time)
     hook_time_thread.start()
     
-    now = datetime.now().hour
-    if now < 9:
-        say('Доброе утро')
-    elif now < 17:
-        say('добрый день')
-    else:
-        say('добрый вечер')
         
     p = pyaudio.PyAudio()
     
@@ -93,6 +88,15 @@ def main():
     
     frames = []
     count = const['RATE'] / const['CHUNK'] * const['SH_TIME']
+    
+    now = datetime.now().hour
+    if now < 9:
+        say('Доброе утро')
+    elif now < 17:
+        say('добрый день')
+    else:
+        say('добрый вечер')
+        
     while True:
         data = stream.read(const['CHUNK'])
         

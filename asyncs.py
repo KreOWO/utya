@@ -30,7 +30,7 @@ def hook_time():
 
 def say(txt):
     speak = wincl.Dispatch("SAPI.SpVoice")
-    speak.Rate = 1
+    speak.Rate = 1.5
     speak.Volume = 100
     saying = lambda: speak.Speak(txt)
     print(txt)

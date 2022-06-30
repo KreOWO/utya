@@ -54,3 +54,4 @@ def callback(voice, varable):
                     exec_cmd(*new_cmd[i], varable)
     
     return varable
+

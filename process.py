@@ -306,3 +306,4 @@ class Input(ctypes.Structure):
         ("type", ctypes.c_ulong),
         ("ii", Input_I)
     ]
+

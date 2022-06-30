@@ -4,6 +4,7 @@ import webbrowser
 import win32gui
 import keyboard
 import mouse
+import wikipedia
 
 from asyncs import say
 from process import work_process
@@ -32,10 +33,39 @@ def exec_cmd(cmd, cmd_name, prev_cmd_txt, varable):
     # Работа с браузером
     elif cmd == 'search_google':
         if prev_cmd_txt != '':
-            webbrowser.get('opera-gx').open(
-                'https://www.google.com/search?client=opera-gx&sourceid=opera&ie=UTF-8&oe=UTF-8&q=' + prev_cmd_txt.replace(
-                    ' ', '+'))
-            say('Ищу ' + prev_cmd_txt)
+            try:
+                result = wikipedia.summary(prev_cmd_txt, sentences=5)
+                replace_it = {'==': '',
+                              '\n\n': '\n',
+                              '--': '-',
+                              '—': ' - '}
+                for i, j in replace_it.items():
+                    while i in result:
+                        result = result.replace(i, j)
+                newres = ''
+                start_skob = False
+                preds = 0
+                for i in result.split(' '):
+                    if not start_skob and i != '':
+                        if '(' in i:
+                            start_skob = True
+                        else:
+                            newres += ' ' + i
+                            if '.' in i:
+                                preds += 1
+                                if preds > 1 and len(newres.split(' ')) > 15:
+                                    break
+                    elif ')' in i:
+                        start_skob = False
+                    
+                say('Вот статья из википедии\n' + newres)
+                
+            except Exception as e:
+                print(e)
+                webbrowser.get('opera-gx').open(
+                    'https://www.google.com/search?client=opera-gx&sourceid=opera&ie=UTF-8&oe=UTF-8&q=' + prev_cmd_txt.replace(
+                        ' ', '+'))
+                say('Ищу в браузере' + prev_cmd_txt)
     
     elif cmd == 'open_site':
         if prev_cmd_txt != '':
